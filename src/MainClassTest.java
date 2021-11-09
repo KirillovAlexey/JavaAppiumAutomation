@@ -3,9 +3,9 @@ import org.junit.Test;
 
 public class MainClassTest {
     @Test()
-    public void testGetLocalNumber()
+    public void testGetClassNumber()
     {
-        Assert.assertEquals("Число которое вернул метод getLocalNumber() не равняется 14",
-                14, new MainClass().getLocalNumber());
+        Assert.assertTrue("Число которое вернул метод getClassNumber() меньше, либо равно 45",
+                new MainClass().getClassNumber()>45);
     }
 }
