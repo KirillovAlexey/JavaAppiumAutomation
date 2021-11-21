@@ -1,9 +1,14 @@
 import io.appium.java_client.AppiumDriver;
 import io.appium.java_client.android.AndroidDriver;
 import org.junit.After;
+import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
+import org.openqa.selenium.By;
+import org.openqa.selenium.WebElement;
 import org.openqa.selenium.remote.DesiredCapabilities;
+import org.openqa.selenium.support.ui.ExpectedConditions;
+import org.openqa.selenium.support.ui.WebDriverWait;
 
 import java.net.URL;
 
@@ -32,21 +37,164 @@ public class FirstTest {
         driver.quit();
     }
 
+    @Test
+    public void ex2() {
+//        waitForElementAndClick(
+//                By.xpath("//*[@resource-id = 'org.wikipedia:id/search_container']" +
+//                        "//*[@class='android.widget.TextView']"),
+//                "errorClick",
+//                5);
+//
+//        waitForElementAndSendKeys(
+//                By.xpath("//*[contains(@text, 'Search…')]"),
+//                "Java",
+//                "error",5
+//        );
+//
+//        waitForElementAndClick(
+//                By.xpath("//*[@text = 'JavaScript']"),
+//                "errorClick",
+//                5);
+//
+//
+//        waitForElementAndClick(
+//                By.xpath("//*[contains(@text, 'Search')]"),
+//                "errorClick",
+//                5);
 
-    //Ex2: Создание метода
-    //Необходимо написать функцию, которая проверяет наличие ожидаемого текста у элемента.
-    //Предлагается назвать ее assertElementHasText. На вход эта функция должна принимать локатор элемент,
-    //ожидаемый текст и текст ошибки, который будет написан в случае, если элемент по этому локатору не содержит текст,
-    //который мы ожидаем.
-    //Также, необходимо написать тест, который проверяет, что поле ввода для поиска статьи содержит текст
-    //(в разных версиях приложения это могут быть тексты "Search..." или "Search Wikipedia",
-    //правильным вариантом следует считать тот, которые есть сейчас). Очевидно, что тест должен использовать
-    //написанный ранее метод.
-    //Результат выполнения задания нужно отдельным коммитом положить в git.
-    //В качестве ответа прислать ссылку на коммит. Если вам потребовалось несколько коммитов для выполнения одного
-    //задания - присылайте ссылки на все эти коммиты с комментариями.
+//        WebElement webElement = waitForElementPresent(
+//                By.xpath("//*[@resource-id = 'org.wikipedia:id/search_container']" +
+//                        "//*[@class='android.widget.TextView']"),
+//                "error",
+//                15
+//        );
+        //String str = webElement.getText();
+        //System.out.println(str);
+        assertElementHasText(
+                By.id("org.wikipedia:id/search_src_text"),
+                "Search Wikipedia",
+                "Ожидаемый текст отсутствует по указанному локатору");
+    }
     @Test
     public void firstTests() {
-        System.out.println("FirstTestRun");
+
+        waitForElementAndClick(
+                By.xpath("//*[contains(@text, 'Search Wikipedia')]"),
+                "errorClick",
+                5);
+
+        waitForElementAndSendKeys(
+                By.xpath("//*[contains(@text, 'Search…')]"),
+                "Java",
+                "error",
+                5
+        );
+        waitForElementPresent(
+                By.xpath("//*[@resource-id='org.wikipedia:id/page_list_item_container']//*[@text='Object-oriented programming language']"),
+                "error",
+                15);
+    }
+
+    @Test
+    public void testCancelSearch() {
+        waitForElementAndClick(
+                By.id("org.wikipedia:id/search_container"),
+                "error",
+                5);
+        waitForElementAndSendKeys(
+                By.xpath("//*[contains(@text, 'Search…')]"),
+                "Java",
+                "error",
+                5
+        );
+        waitForElementAndClear(
+                By.id("org.wikipedia:id/search_src_text"),
+                "error",
+                5
+        );
+        waitForElementAndClick(
+                By.id("org.wikipedia:id/search_close_btn"),
+                "error",
+                5);
+        waitElementNotPresent(
+                By.id("org.wikipedia:id/search_close_btn"),
+                "error",
+                5);
+    }
+
+    @Test
+    public void testCompareArticleTitie() {
+        waitForElementAndClick(
+                By.xpath("//*[contains(@text, 'Search Wikipedia')]"),
+                "errorClick",
+                5);
+
+        waitForElementAndSendKeys(
+                By.xpath("//*[contains(@text, 'Search…')]"),
+                "Java",
+                "error",
+                5
+        );
+
+        waitForElementAndClick(
+                By.xpath("//*[@resource-id='org.wikipedia:id/page_list_item_container']//*[@text='Object-oriented programming language']"),
+                "errorClick",
+                5);
+        waitForElementPresent(
+                By.id("org.wikipedia:id/view_page_title_text"),
+                "error",
+                15
+        );
+        WebElement titleElement = waitForElementPresent(
+                By.id("org.wikipedia:id/view_page_title_text"),
+                "error",
+                15
+        );
+    }
+
+    private WebElement waitForElementPresent(By by, String errorMessage, long timeoutInSeconds) {
+        WebDriverWait wait = new WebDriverWait(driver, timeoutInSeconds);
+        wait.withMessage(errorMessage + "\n");
+        return wait.until(ExpectedConditions.presenceOfElementLocated(by));
+    }
+
+    private WebElement waitForElementPresent(By by, String errorMessage) {
+        return waitForElementPresent(by, errorMessage, 5);
+    }
+
+    private WebElement waitForElementAndClick(By by, String message, long timeoutInSeconds) {
+        WebElement element = waitForElementPresent(by, message, timeoutInSeconds);
+        element.click();
+        return element;
+    }
+
+    private WebElement waitForElementAndSendKeys(By by, String value, String message, long timeoutInSeconds) {
+        WebElement element = waitForElementPresent(by, message, timeoutInSeconds);
+        element.sendKeys(value);
+        return element;
+    }
+
+    private boolean waitElementNotPresent(By by, String message, long timeoutInSeconds) {
+        WebDriverWait wait = new WebDriverWait(driver, timeoutInSeconds);
+        wait.withMessage(message + "\n");
+        return wait.until(ExpectedConditions.invisibilityOfElementLocated(by));
+    }
+
+    private WebElement waitForElementAndClear(By by, String message, long timeoutInSeconds) {
+        WebElement element = waitForElementPresent(by, message, timeoutInSeconds);
+        element.clear();
+        return element;
+    }
+
+    private WebElement assertElementHasText(By by, String expected, String message) {
+        //WebElement element = waitForElementPresent(by, message, 5);
+        WebElement webElement = waitForElementPresent(
+                By.xpath("//*[@resource-id = 'org.wikipedia:id/search_container']" +
+                        "//*[@class='android.widget.TextView']"),
+                "error",
+                15
+        );
+        Assert.assertEquals(message, expected, webElement.getText());
+        return webElement;
     }
 }
