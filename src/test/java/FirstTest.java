@@ -94,7 +94,7 @@ public class FirstTest {
     }
 
     @Test
-    public void testCompareArticleTitie() {
+    public void testCompareArticleTitle() {
         waitForElementAndClick(
                 By.xpath("//*[contains(@text, 'Search Wikipedia')]"),
                 "errorClick",
