@@ -39,42 +39,13 @@ public class FirstTest {
 
     @Test
     public void ex2() {
-//        waitForElementAndClick(
-//                By.xpath("//*[@resource-id = 'org.wikipedia:id/search_container']" +
-//                        "//*[@class='android.widget.TextView']"),
-//                "errorClick",
-//                5);
-//
-//        waitForElementAndSendKeys(
-//                By.xpath("//*[contains(@text, 'Search…')]"),
-//                "Java",
-//                "error",5
-//        );
-//
-//        waitForElementAndClick(
-//                By.xpath("//*[@text = 'JavaScript']"),
-//                "errorClick",
-//                5);
-//
-//
-//        waitForElementAndClick(
-//                By.xpath("//*[contains(@text, 'Search')]"),
-//                "errorClick",
-//                5);
-
-//        WebElement webElement = waitForElementPresent(
-//                By.xpath("//*[@resource-id = 'org.wikipedia:id/search_container']" +
-//                        "//*[@class='android.widget.TextView']"),
-//                "error",
-//                15
-//        );
-        //String str = webElement.getText();
-        //System.out.println(str);
         assertElementHasText(
-                By.id("org.wikipedia:id/search_src_text"),
+                By.xpath("//*[@resource-id = 'org.wikipedia:id/search_container']" +
+                        "//*[@class='android.widget.TextView']"),
                 "Search Wikipedia",
                 "Ожидаемый текст отсутствует по указанному локатору");
     }
+
     @Test
     public void firstTests() {
 
@@ -187,10 +158,8 @@ public class FirstTest {
     }
 
     private WebElement assertElementHasText(By by, String expected, String message) {
-        //WebElement element = waitForElementPresent(by, message, 5);
         WebElement webElement = waitForElementPresent(
-                By.xpath("//*[@resource-id = 'org.wikipedia:id/search_container']" +
-                        "//*[@class='android.widget.TextView']"),
+                by,
                 "error",
                 15
         );
