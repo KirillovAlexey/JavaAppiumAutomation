@@ -48,9 +48,37 @@ public class FirstTest {
 //                "Ожидаемый текст отсутствует по указанному локатору");
 //    }
 
-    @Test
-    public void ex3() {
+//    @Test
+//    public void ex3() {
+//
+//        waitForElementAndClick(
+//                By.xpath("//*[contains(@text, 'Search Wikipedia')]"),
+//                "errorClick",
+//                5);
+//
+//        waitForElementAndSendKeys(
+//                By.xpath("//*[contains(@text, 'Search…')]"),
+//                "Java",
+//                "error",
+//                5
+//        );
+//
+//        list.addAll(driver.findElementsById("org.wikipedia:id/page_list_item_container"));
+//        checkCountUrls(list);
+//
+//        waitForElementAndClick(
+//                By.id("org.wikipedia:id/search_close_btn"),
+//                "error",
+//                5);
+//
+//        assertElementHasText(
+//                By.xpath("//*[@text='Search…']"),
+//                "Search…",
+//                "Ожидаемый текст отсутствует по указанному локатору");
+//    }
 
+    @Test
+    public void ex4() {
         waitForElementAndClick(
                 By.xpath("//*[contains(@text, 'Search Wikipedia')]"),
                 "errorClick",
@@ -62,19 +90,11 @@ public class FirstTest {
                 "error",
                 5
         );
-
-        list.addAll(driver.findElementsById("org.wikipedia:id/page_list_item_container"));
-        checkCountUrls(list);
-
-        waitForElementAndClick(
-                By.id("org.wikipedia:id/search_close_btn"),
-                "error",
-                5);
-
-        assertElementHasText(
-                By.xpath("//*[@text='Search…']"),
-                "Search…",
-                "Ожидаемый текст отсутствует по указанному локатору");
+        //xpathShort - *[@resource-id='org.wikipedia:id/page_list_item_title']
+        //id - org.wikipedia:id/page_list_item_title
+        list.clear();
+        list.addAll(driver.findElementsById("org.wikipedia:id/page_list_item_title"));
+        checkWordInputAllUrls(list);
     }
 
 //    @Test
@@ -200,5 +220,12 @@ public class FirstTest {
 
     private void checkCountUrls(List list) {
         Assert.assertTrue("Количество статей менее либо равно '1'", list.size() > 1);
+    }
+
+    private void checkWordInputAllUrls(List<WebElement> list) {
+        for (WebElement element : list) {
+            Assert.assertTrue("В указанной ссылке отсутствует искомое слово в названии",
+                    element.getText().contains("Java"));
+        }
     }
 }
