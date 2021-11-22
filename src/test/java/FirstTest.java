@@ -11,10 +11,12 @@ import org.openqa.selenium.support.ui.ExpectedConditions;
 import org.openqa.selenium.support.ui.WebDriverWait;
 
 import java.net.URL;
+import java.util.LinkedList;
+import java.util.List;
 
 public class FirstTest {
-
     private AppiumDriver driver;
+    List<WebElement> list = new LinkedList<>();
 
     @Before
     public void setUp() throws Exception {
@@ -37,91 +39,120 @@ public class FirstTest {
         driver.quit();
     }
 
+//    @Test
+//    public void ex2() {
+//        assertElementHasText(
+//                By.xpath("//*[@resource-id = 'org.wikipedia:id/search_container']" +
+//                        "//*[@class='android.widget.TextView']"),
+//                "Search Wikipedia",
+//                "Ожидаемый текст отсутствует по указанному локатору");
+//    }
+
     @Test
-    public void ex2() {
+    public void ex3() {
+
+        waitForElementAndClick(
+                By.xpath("//*[contains(@text, 'Search Wikipedia')]"),
+                "errorClick",
+                5);
+
+        waitForElementAndSendKeys(
+                By.xpath("//*[contains(@text, 'Search…')]"),
+                "Java",
+                "error",
+                5
+        );
+
+        list.addAll(driver.findElementsById("org.wikipedia:id/page_list_item_container"));
+        checkCountUrls(list);
+
+        waitForElementAndClick(
+                By.id("org.wikipedia:id/search_close_btn"),
+                "error",
+                5);
+
         assertElementHasText(
-                By.xpath("//*[@resource-id = 'org.wikipedia:id/search_container']" +
-                        "//*[@class='android.widget.TextView']"),
-                "Search Wikipedia",
+                By.xpath("//*[@text='Search…']"),
+                "Search…",
                 "Ожидаемый текст отсутствует по указанному локатору");
     }
 
-    @Test
-    public void firstTests() {
-
-        waitForElementAndClick(
-                By.xpath("//*[contains(@text, 'Search Wikipedia')]"),
-                "errorClick",
-                5);
-
-        waitForElementAndSendKeys(
-                By.xpath("//*[contains(@text, 'Search…')]"),
-                "Java",
-                "error",
-                5
-        );
-        waitForElementPresent(
-                By.xpath("//*[@resource-id='org.wikipedia:id/page_list_item_container']//*[@text='Object-oriented programming language']"),
-                "error",
-                15);
-    }
-
-    @Test
-    public void testCancelSearch() {
-        waitForElementAndClick(
-                By.id("org.wikipedia:id/search_container"),
-                "error",
-                5);
-        waitForElementAndSendKeys(
-                By.xpath("//*[contains(@text, 'Search…')]"),
-                "Java",
-                "error",
-                5
-        );
-        waitForElementAndClear(
-                By.id("org.wikipedia:id/search_src_text"),
-                "error",
-                5
-        );
-        waitForElementAndClick(
-                By.id("org.wikipedia:id/search_close_btn"),
-                "error",
-                5);
-        waitElementNotPresent(
-                By.id("org.wikipedia:id/search_close_btn"),
-                "error",
-                5);
-    }
-
-    @Test
-    public void testCompareArticleTitle() {
-        waitForElementAndClick(
-                By.xpath("//*[contains(@text, 'Search Wikipedia')]"),
-                "errorClick",
-                5);
-
-        waitForElementAndSendKeys(
-                By.xpath("//*[contains(@text, 'Search…')]"),
-                "Java",
-                "error",
-                5
-        );
-
-        waitForElementAndClick(
-                By.xpath("//*[@resource-id='org.wikipedia:id/page_list_item_container']//*[@text='Object-oriented programming language']"),
-                "errorClick",
-                5);
-        waitForElementPresent(
-                By.id("org.wikipedia:id/view_page_title_text"),
-                "error",
-                15
-        );
-        WebElement titleElement = waitForElementPresent(
-                By.id("org.wikipedia:id/view_page_title_text"),
-                "error",
-                15
-        );
-    }
+//    @Test
+//    public void firstTests() {
+//
+//        waitForElementAndClick(
+//                By.xpath("//*[contains(@text, 'Search Wikipedia')]"),
+//                "errorClick",
+//                5);
+//
+//        waitForElementAndSendKeys(
+//                By.xpath("//*[contains(@text, 'Search…')]"),
+//                "Java",
+//                "error",
+//                5
+//        );
+//        waitForElementPresent(
+//                By.xpath("//*[@resource-id='org.wikipedia:id/page_list_item_container']//*[@text='Object-oriented programming language']"),
+//                "error",
+//                15);
+//    }
+//
+//    @Test
+//    public void testCancelSearch() {
+//        waitForElementAndClick(
+//                By.id("org.wikipedia:id/search_container"),
+//                "error",
+//                5);
+//        waitForElementAndSendKeys(
+//                By.xpath("//*[contains(@text, 'Search…')]"),
+//                "Java",
+//                "error",
+//                5
+//        );
+//        waitForElementAndClear(
+//                By.id("org.wikipedia:id/search_src_text"),
+//                "error",
+//                5
+//        );
+//        waitForElementAndClick(
+//                By.id("org.wikipedia:id/search_close_btn"),
+//                "error",
+//                5);
+//        waitElementNotPresent(
+//                By.id("org.wikipedia:id/search_close_btn"),
+//                "error",
+//                5);
+//    }
+//
+//    @Test
+//    public void testCompareArticleTitle() {
+//        waitForElementAndClick(
+//                By.xpath("//*[contains(@text, 'Search Wikipedia')]"),
+//                "errorClick",
+//                5);
+//
+//        waitForElementAndSendKeys(
+//                By.xpath("//*[contains(@text, 'Search…')]"),
+//                "Java",
+//                "error",
+//                5
+//        );
+//
+//        waitForElementAndClick(
+//                By.xpath("//*[@resource-id='org.wikipedia:id/page_list_item_container']//*[@text='Object-oriented programming language']"),
+//                "errorClick",
+//                5);
+//        waitForElementPresent(
+//                By.id("org.wikipedia:id/view_page_title_text"),
+//                "error",
+//                15
+//        );
+//        WebElement titleElement = waitForElementPresent(
+//                By.id("org.wikipedia:id/view_page_title_text"),
+//                "error",
+//                15
+//        );
+//    }
 
     private WebElement waitForElementPresent(By by, String errorMessage, long timeoutInSeconds) {
         WebDriverWait wait = new WebDriverWait(driver, timeoutInSeconds);
@@ -165,5 +196,9 @@ public class FirstTest {
         );
         Assert.assertEquals(message, expected, webElement.getText());
         return webElement;
+    }
+
+    private void checkCountUrls(List list) {
+        Assert.assertTrue("Количество статей менее либо равно '1'", list.size() > 1);
     }
 }
