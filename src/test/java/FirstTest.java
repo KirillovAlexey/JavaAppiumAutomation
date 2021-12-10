@@ -19,6 +19,9 @@ import java.util.List;
 public class FirstTest {
     List<WebElement> list = new LinkedList<>();
     private AppiumDriver driver;
+    String searchWord = "Java";
+    String searchSite = "Java (programming language)";
+    String nameFolder = "Learning Programming";
 
     @Before
     public void setUp() throws Exception {
@@ -43,9 +46,6 @@ public class FirstTest {
 
     @Test
     public void ex5() {
-        String searchWord = "Java";
-        String searchSite = "Java (programming language)";
-        String nameFolder = "Learning Programming";
         //добавляем первую статью в закладки
         addSiteToBookMark(searchWord, searchSite);
         waitForElementAndClick(
@@ -143,6 +143,27 @@ public class FirstTest {
                 By.xpath("//*[contains(@text, 'Add to reading list')]"),
                 "Cannot find option to add article to reading list",
                 5);
+    }
+
+    @Test
+    public void ex6() {
+        waitForElementAndClick(
+                By.xpath("//*[contains(@text, 'Search Wikipedia')]"),
+                "errorClick",
+                5);
+
+        waitForElementAndSendKeys(
+                By.xpath("//*[contains(@text, 'Search…')]"),
+                searchWord,
+                "error",
+                5);
+
+        waitForElementAndClick(
+                By.xpath("//*[@class='android.widget.TextView' " +
+                        "and contains(@text,'" + searchSite + "')]"),
+                "errorClick",
+                5);
+        assertElementPresent(By.id("org.wikipedia:id/view_page_title_text"));
     }
 
 //    //Обучение
@@ -495,5 +516,13 @@ public class FirstTest {
             String default_message = "An element " + by.toString() + " supposed to be not present";
             throw new AssertionError(default_message + " " + message);
         }
+    }
+
+    private void assertElementPresent(By by) {
+        //String s = driver.findElement(by).getText();
+        //driver.findElement(By.context).getText();;
+        //System.out.println(this.driver.getTitle());
+        //waitForElementPresent(by,"Title is not download");
+        Assert.assertNotNull("Title is not found", driver.findElement(by));
     }
 }
