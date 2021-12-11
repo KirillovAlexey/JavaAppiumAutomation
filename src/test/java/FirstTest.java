@@ -7,6 +7,7 @@ import org.junit.Before;
 import org.junit.Test;
 import org.openqa.selenium.By;
 import org.openqa.selenium.Dimension;
+import org.openqa.selenium.ScreenOrientation;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.remote.DesiredCapabilities;
 import org.openqa.selenium.support.ui.ExpectedConditions;
@@ -22,6 +23,7 @@ public class FirstTest {
     String searchWord = "Java";
     String searchSite = "Java (programming language)";
     String nameFolder = "Learning Programming";
+    String defaultOrientation = "PORTRAIT";
 
     @Before
     public void setUp() throws Exception {
@@ -37,6 +39,11 @@ public class FirstTest {
                 "C:\\Users\\amoroz\\Desktop\\JavaAppiumAutomation\\apks\\org.wikipedia.apk");
 
         driver = new AndroidDriver(new URL("http://127.0.0.1:4723/wd/hub"), capabilities);
+
+        //Дополнительная проверка помимо той что в методе ex7()
+        if (!driver.getOrientation().equals(defaultOrientation)) {
+            driver.rotate(ScreenOrientation.PORTRAIT);
+        }
     }
 
     @After
@@ -51,7 +58,7 @@ public class FirstTest {
         waitForElementAndClick(
                 By.xpath("//*[contains(@text, 'GOT IT')]"),
                 "Cannot find button 'GOT IT'",
-                5);
+                10);
         waitForElementAndClear(
                 By.id("org.wikipedia:id/text_input"),
                 "Cannot find input field",
@@ -85,10 +92,10 @@ public class FirstTest {
         //Переход в меню закладок, выбор ранее созданной.
         waitForElementAndClick(By.xpath("//*[contains(@content-desc, 'My lists')]"),
                 "Cannot find button 'My Lists'",
-                5);
+                15);
         waitForElementAndClick(By.xpath("//*[contains(@text, '" + nameFolder + "')]"),
                 "Cannot find folder",
-                5);
+                15);
         //Удаление закладки "Java (programming language)"
         swipeElementToLeft(
                 By.xpath("//*[contains(@text, 'Java (programming language)')]"),
@@ -116,7 +123,7 @@ public class FirstTest {
         waitForElementAndClick(
                 By.xpath("//*[contains(@text, 'Search Wikipedia')]"),
                 "errorClick",
-                5);
+                10);
 
         waitForElementAndSendKeys(
                 By.xpath("//*[contains(@text, 'Search…')]"),
@@ -138,7 +145,7 @@ public class FirstTest {
         waitForElementAndClick(
                 By.xpath("//android.widget.ImageView[@content-desc = 'More options']"),
                 "Cannot find button 'More Options'",
-                5);
+                10);
         waitForElementAndClick(
                 By.xpath("//*[contains(@text, 'Add to reading list')]"),
                 "Cannot find option to add article to reading list",
@@ -166,7 +173,31 @@ public class FirstTest {
         assertElementPresent(By.id("org.wikipedia:id/view_page_title_text"));
     }
 
-//    //Обучение
+    @Test
+    public void ex7() {
+        try {
+            waitForElementAndClick(
+                    By.xpath("//*[contains(@text, 'Search Wikipedia')]"),
+                    "errorClick",
+                    5);
+
+            driver.rotate(ScreenOrientation.LANDSCAPE);
+
+            waitForElementAndClick(
+                    By.xpath("//*[@class='android.widget.TextView' " +
+                            "and contains(@text,'" + searchSite + "')]"),
+                    "Cannot find 'Java (programming language)' topic searching by" + searchSite,
+                    15);
+            //throw new Exception(new Exception());
+            //assertElementPresent(By.id("org.wikipedia:id/view_page_title_text"));
+        } catch (Exception e) {
+            System.out.println(e.getMessage());
+        } finally {
+            driver.rotate(ScreenOrientation.PORTRAIT);
+        }
+    }
+
+    //    //Обучение
 //    @Test
 //    public void saveArticleToMyList() {
 //        waitForElementAndClick(
@@ -275,7 +306,7 @@ public class FirstTest {
 //                "Search Wikipedia",
 //                "Ожидаемый текст отсутствует по указанному локатору");
 //    }
-//
+
 //    @Test
 //    public void ex3() {
 //
@@ -519,10 +550,7 @@ public class FirstTest {
     }
 
     private void assertElementPresent(By by) {
-        //String s = driver.findElement(by).getText();
-        //driver.findElement(By.context).getText();;
-        //System.out.println(this.driver.getTitle());
         //waitForElementPresent(by,"Title is not download");
-        Assert.assertNotNull("Title is not found", driver.findElement(by));
+        Assert.assertNotNull("Title is not found", driver.findElement(by).getText());
     }
 }
