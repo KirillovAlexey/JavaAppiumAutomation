@@ -7,7 +7,8 @@ public class MyListsPageObject extends MainPageObject {
 
     private static final String
             FOLDER_BY_NAME = "//*[contains(@text, '{FOLDER_NAME}')]",
-            ARTICLE_BY_TITLE = "//*[contains(@text, '{TITLE}')]";
+            ARTICLE_BY_TITLE = "//*[contains(@text, '{TITLE}')]",
+            OPEN_BOOKMARK = "//*[contains(@text,'{{BOOKMARK}}')]/../../..";
 
     public MyListsPageObject(AppiumDriver driver) {
         super(driver);
@@ -47,9 +48,22 @@ public class MyListsPageObject extends MainPageObject {
                 15);
     }
 
+    public void clickByBookMark(String bookmark) {
+        this.waitForArticleToAppearByTitle(bookmark);
+        String bookmarkThis = getSavedArticleXpathByTitle(bookmark);
+        this.waitForElementAndClick(
+                By.xpath(bookmarkThis),
+                "Cannot click by bookmark" + bookmark,
+                5);
+    }
+
     /*TEMPLATES METHODS*/
     private static String getFolderXpathByName(String nameFolder) {
         return FOLDER_BY_NAME.replace("{FOLDER_NAME}", nameFolder);
+    }
+
+    private static String getOpenBookmarkXpathByName(String bookmark) {
+        return OPEN_BOOKMARK.replace("{BOOKMARK}", bookmark);
     }
 
     private static String getSavedArticleXpathByTitle(String articleTitle) {

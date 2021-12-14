@@ -16,8 +16,13 @@ public class CoreTestCase extends TestCase {
     protected AppiumDriver driver;
     protected String defaultOrientation = "PORTRAIT";
     protected List<WebElement> list = new LinkedList<>();
+
+    public List<WebElement> getList() {
+        return list;
+    }
+
     protected String searchWord = "Java";
-    protected String choiceSite = "Java (programming language)";
+
     protected String nameFolder = "Learning Programming";
     private static String appiumURL = "http://127.0.0.1:4723/wd/hub";
 

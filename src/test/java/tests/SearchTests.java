@@ -29,7 +29,7 @@ public class SearchTests extends CoreTestCase {
     }
 
     @Test
-    public void testSearchSite() {
+    public void testSearchArticle() {
         SearchPageObject searchPageObject = new SearchPageObject(driver);
         searchPageObject.initSearchInput();
         searchPageObject.typeSearchLine("Java");
@@ -43,5 +43,21 @@ public class SearchTests extends CoreTestCase {
         searchPageObject.waitForCancelButtonAppear();
         searchPageObject.clickCancelSearch();
         searchPageObject.waitForCancelButtonDisappear();
+    }
+
+    //EX3
+    @Test
+    public void testCancelSearchEx3() {
+
+        SearchPageObject searchPageObject = new SearchPageObject(driver);
+        searchPageObject.initSearchInput();
+        String searchLine = "Java";
+        searchPageObject.typeSearchLine(searchLine);
+        int countArticles = searchPageObject.getAmountOfFoundArticles();
+        assertTrue(
+                "Articles less that 1",
+                countArticles > 1);
+        searchPageObject.clickCancelSearch();
+        searchPageObject.typeSearchLine("Search…");
     }
 }

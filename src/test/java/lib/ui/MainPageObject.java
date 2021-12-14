@@ -9,10 +9,12 @@ import org.openqa.selenium.WebElement;
 import org.openqa.selenium.support.ui.ExpectedConditions;
 import org.openqa.selenium.support.ui.WebDriverWait;
 
+import java.util.LinkedList;
 import java.util.List;
 
 public class MainPageObject {
     protected AppiumDriver driver;
+    protected List<WebElement> list = new LinkedList<>();
 
     public MainPageObject(AppiumDriver driver) {
         this.driver = driver;
@@ -103,7 +105,7 @@ public class MainPageObject {
     public WebElement assertElementHasText(By by, String expected, String message) {
         WebElement webElement = waitForElementPresent(
                 by,
-                "error",
+                "Cannot find this text in search" + expected,
                 15
         );
         Assert.assertEquals(message, expected, webElement.getText());
@@ -114,10 +116,10 @@ public class MainPageObject {
         Assert.assertTrue("Количество статей менее либо равно '1'", list.size() > 1);
     }
 
-    public void checkWordInputAllUrls(List<WebElement> list) {
+    public void checkWordInputAllUrls(List<WebElement> list, String searchWord) {
         for (WebElement element : list) {
             Assert.assertTrue("В указанной ссылке отсутствует искомое слово в названии",
-                    element.getText().contains("Java"));
+                    element.getText().contains(searchWord));
         }
     }
 
@@ -134,8 +136,11 @@ public class MainPageObject {
         }
     }
 
-    public void assertElementPresent(By by) {
-        //waitForElementPresent(by,"Title is not download");
-        Assert.assertNotNull("Title is not found", driver.findElement(by).getText());
+    public WebElement assertElementPresentWithoutTimeout(By by) {
+        WebElement element = waitForElementPresent(
+                by,
+                "Cannot find title in Article",
+                0);
+        return element;
     }
 }

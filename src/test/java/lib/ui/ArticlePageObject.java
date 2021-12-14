@@ -14,7 +14,9 @@ public class ArticlePageObject extends MainPageObject {
             ADD_TO_MY_LIST_OVERLAY = "//*[contains(@text, 'GOT IT')]",
             MY_LIST_NAME_INPUT = "org.wikipedia:id/text_input",
             MY_LIST_OK_BUTTON = "//*[contains(@text, 'OK')]",
-            CLOSE_ARTICLE_BUTTON = "//*[contains(@content-desc, 'Navigate up')]";
+            CLOSE_ARTICLE_BUTTON = "//*[contains(@content-desc, 'Navigate up')]",
+            ADD_TO_MY_CREATED_LIST_PREVIOUS = "//*[contains(@text,'{nameFolder}')]/../..",
+            ADD_NEW_FOLDER_NAME = "org.wikipedia:id/create_button";
 
     public ArticlePageObject(AppiumDriver driver) {
         super(driver);
@@ -32,6 +34,11 @@ public class ArticlePageObject extends MainPageObject {
         return titleElement.getAttribute("text");
     }
 
+    public String getArticleTitleWithoutTimeout() {
+        WebElement titleElement = this.assertElementPresentWithoutTimeout(By.id(TITLE));
+        return titleElement.getAttribute("text");
+    }
+
     public void swipeToFooter() {
         this.swipeUpToFindElement(
                 By.xpath(FOOTER_ELEMENT),
@@ -40,7 +47,7 @@ public class ArticlePageObject extends MainPageObject {
         );
     }
 
-    public void addArticleToMyList(String nameOfFolder) {
+    public void addFirstArticleToMyList(String nameOfFolder) {
         this.waitForElementAndClick(
                 By.xpath(OPTIONS_BUTTON),
                 "Cannot find button 'More Options'",
@@ -73,9 +80,46 @@ public class ArticlePageObject extends MainPageObject {
                 5);
     }
 
+    public void addArticleToCreatedFolder(String nameFolder) {
+        this.waitForElementAndClick(
+                By.xpath(OPTIONS_BUTTON),
+                "Cannot find button 'More Options'",
+                5);
+
+        this.waitForElementAndClick(
+                By.xpath(OPTIONS_ADD_TO_MY_LIST_BUTTON),
+                "Cannot find option to add article to reading list",
+                5);
+
+        String folderName = getResultSearchFolder(nameFolder);
+        this.waitForElementAndClick(
+                By.xpath(folderName),
+                "Cannot find folder name'" + nameFolder,
+                5);
+    }
+
+    public void addArticleToNewCreateFolder() {
+        this.waitForElementAndClick(
+                By.xpath(OPTIONS_BUTTON),
+                "Cannot find button 'More Options'",
+                5);
+
+        this.waitForElementAndClick(
+                By.xpath(OPTIONS_ADD_TO_MY_LIST_BUTTON),
+                "Cannot find option to add article to reading list",
+                5);
+
+    }
+
     public void closeArticle() {
         this.waitForElementAndClick(By.xpath(CLOSE_ARTICLE_BUTTON),
                 "Cannot find close article button 'X'",
                 5);
     }
+
+    /*TEMPLATES METHODS*/
+    private static String getResultSearchFolder(String nameFolder) {
+        return ADD_TO_MY_CREATED_LIST_PREVIOUS.replace("{nameFolder}", nameFolder);
+    }
+    /*TEMPLATES METHODS*/
 }

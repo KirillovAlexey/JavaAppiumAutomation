@@ -13,7 +13,8 @@ public class SearchPageObject extends MainPageObject {
                             "//*[@text='{SUBSTRING}']",
             SEARCH_CANCEL_BUTTON = "org.wikipedia:id/search_close_btn",
             SEARCH_RESULT_ELEMENT = "//*[@resource-id='org.wikipedia:id/search_results_list']/*[@resource-id='org.wikipedia:id/page_list_item_container']",
-            SEARCH_EMPTY_RESULT_ELEMENT = "//*[@text='No results found']";
+            SEARCH_EMPTY_RESULT_ELEMENT = "//*[@text='No results found']",
+            ADD_SEARCH_ARTICLE_TO_LIST = "org.wikipedia:id/page_list_item_title";
 
     public SearchPageObject(AppiumDriver driver) {
         super(driver);
@@ -58,6 +59,7 @@ public class SearchPageObject extends MainPageObject {
     }
 
     public void clickCancelSearch() {
+        this.waitForCancelButtonAppear();
         this.waitForElementAndClick(
                 By.id(SEARCH_CANCEL_BUTTON),
                 "Cannot find and click search cancel button",
@@ -92,6 +94,18 @@ public class SearchPageObject extends MainPageObject {
         this.assertElementsNotPresent(
                 By.xpath(SEARCH_RESULT_ELEMENT),
                 "We supposed not to find any results");
+    }
+
+    public void assertThereIsResultSearch() {
+        this.assertElementsNotPresent(
+                By.xpath(SEARCH_RESULT_ELEMENT),
+                "We supposed not to find any results");
+    }
+
+    public void checkSearchWordInFindsArticles(String searchWord) {
+        this.list.clear();
+        this.list.addAll(driver.findElementsById(ADD_SEARCH_ARTICLE_TO_LIST));
+        this.checkWordInputAllUrls(list, searchWord);
     }
 
 
