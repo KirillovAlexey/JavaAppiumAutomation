@@ -44,7 +44,7 @@ public class MyListsPageObject extends MainPageObject {
         String articleTitleXpath = getSavedArticleXpathByTitle(articleTitle);
         this.waitForElementPresent(
                 By.xpath(articleTitleXpath),
-                "Cannot find saved article by title" + articleTitle,
+                "Cannot find saved article by title '" + articleTitle + "'",
                 15);
     }
 

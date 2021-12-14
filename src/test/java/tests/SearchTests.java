@@ -60,4 +60,20 @@ public class SearchTests extends CoreTestCase {
         searchPageObject.clickCancelSearch();
         searchPageObject.typeSearchLine("Search…");
     }
+
+    @Test
+    public void testSearchArticleByTitleAndDescription() {
+        SearchPageObject searchPageObject = new SearchPageObject(driver);
+        searchPageObject.initSearchInput();
+        searchPageObject.typeSearchLine("Java");
+        searchPageObject.checkSearchWordInFindsArticles("Java");
+        searchPageObject.waitForElementByTitleAndDescription(
+                "Java (programming language)",
+                "Object-oriented programming language");
+        int countArticles = searchPageObject.getAmountOfFoundArticles();
+        assertTrue(
+                "Articles less that 3",
+                countArticles >= 3);
+        //searchPageObject.checkFindsArticleInSearchingList();
+    }
 }

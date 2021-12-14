@@ -1,7 +1,9 @@
 package lib.ui;
 
 import io.appium.java_client.AppiumDriver;
+import io.appium.java_client.android.AndroidElement;
 import org.openqa.selenium.By;
+import org.openqa.selenium.WebElement;
 
 public class SearchPageObject extends MainPageObject {
 
@@ -14,8 +16,15 @@ public class SearchPageObject extends MainPageObject {
             SEARCH_CANCEL_BUTTON = "org.wikipedia:id/search_close_btn",
             SEARCH_RESULT_ELEMENT = "//*[@resource-id='org.wikipedia:id/search_results_list']/*[@resource-id='org.wikipedia:id/page_list_item_container']",
             SEARCH_EMPTY_RESULT_ELEMENT = "//*[@text='No results found']",
-            ADD_SEARCH_ARTICLE_TO_LIST = "org.wikipedia:id/page_list_item_title";
+            ADD_SEARCH_ARTICLE_TO_LIST = "org.wikipedia:id/page_list_item_title",
+            SEARCH_ARTICLE_BY_TITLE_AND_DESCRIPTION =
+                    "//*[@resource-id='org.wikipedia:id/page_list_item_container']" +
+                            "//*[@text='{TITLE}']" +
+                            "//.." +
+                            "//*[@text='{DESCRIPTION}']";
 
+    //*[@resource-id='org.wikipedia:id/page_list_item_container']//*[@text='Java'] | //*[@text='Island of Indonesia']
+    //*[@resource-id='org.wikipedia:id/page_list_item_container']//*[@text='Java']//..//*[@text='Island of Indonesia']
     public SearchPageObject(AppiumDriver driver) {
         super(driver);
     }
@@ -107,11 +116,31 @@ public class SearchPageObject extends MainPageObject {
         this.list.addAll(driver.findElementsById(ADD_SEARCH_ARTICLE_TO_LIST));
         this.checkWordInputAllUrls(list, searchWord);
     }
+    public void checkFindsArticleInSearchingList(){
+        for (WebElement article: this.list) {
+            this.waitForElementPresent((By.id(article.getAttribute("resource-id"))) ,"Cannot find this article" + article);
+        }
+    }
 
+    public void waitForElementByTitleAndDescription(String title, String description) {
+        String searchXpath = getResultSearchElementForTitleAndDescriptions(
+                title, description);
+        this.waitForElementPresent(
+                By.xpath(searchXpath),
+                "Cannot find article for this " + title + " or this " + description,
+                10
+        );
+    }
 
     /*TEMPLATES METHODS*/
     private static String getResultSearchElement(String subString) {
         return SEARCH_RESULT_BY_SUBSTRING_TPL.replace("{SUBSTRING}", subString);
+    }
+
+    private static String getResultSearchElementForTitleAndDescriptions(String title, String description) {
+        String temp = SEARCH_ARTICLE_BY_TITLE_AND_DESCRIPTION.replace("{TITLE}", title);
+        temp = temp.replace("{DESCRIPTION}", description);
+        return temp;
     }
     /*TEMPLATES METHODS*/
 }

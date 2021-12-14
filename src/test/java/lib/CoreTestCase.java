@@ -24,7 +24,7 @@ public class CoreTestCase extends TestCase {
     protected String searchWord = "Java";
 
     protected String nameFolder = "Learning Programming";
-    private static String appiumURL = "http://127.0.0.1:4723/wd/hub";
+    private static final String appiumURL = "http://127.0.0.1:4723/wd/hub";
 
     @Override
     protected void setUp() throws Exception {
