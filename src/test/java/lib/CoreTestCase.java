@@ -39,9 +39,10 @@ public class CoreTestCase extends TestCase {
         capabilities.setCapability("appActivity", ".main.MainActivity");
         capabilities.setCapability("app",
                 "C:\\Users\\amoroz\\Desktop\\JavaAppiumAutomation\\apks\\org.wikipedia.apk");
+        capabilities.setCapability("orientation", "PORTRAIT");
+        capabilities.setCapability("androidNaturalOrientation", true);
 
         driver = new AndroidDriver(new URL(appiumURL), capabilities);
-        this.rotateScreenPortrait();
     }
 
     @Override

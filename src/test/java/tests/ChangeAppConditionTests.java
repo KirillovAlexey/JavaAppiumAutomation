@@ -8,35 +8,28 @@ import org.junit.Test;
 public class ChangeAppConditionTests extends CoreTestCase {
     @Test
     public void testRotationDefault() {
-        try {
-            SearchPageObject searchPageObject = new SearchPageObject(driver);
-            searchPageObject.initSearchInput();
-            searchPageObject.typeSearchLine("Java");
-            searchPageObject.clickByArticleWithSubString("Object-oriented programming language");
+        SearchPageObject searchPageObject = new SearchPageObject(driver);
+        searchPageObject.initSearchInput();
+        searchPageObject.typeSearchLine("Java");
+        searchPageObject.clickByArticleWithSubString("Object-oriented programming language");
 
-            ArticlePageObject articlePageObject = new ArticlePageObject(driver);
-            String titleBeforeRotation = articlePageObject.getArticleTitle();
-            this.rotateScreenLandscape();
-            String titleAfterRotation = articlePageObject.getArticleTitle();
+        ArticlePageObject articlePageObject = new ArticlePageObject(driver);
+        String titleBeforeRotation = articlePageObject.getArticleTitle();
+        this.rotateScreenLandscape();
+        String titleAfterRotation = articlePageObject.getArticleTitle();
 
-            assertEquals(
-                    "Article title have been changed after screen rotation",
-                    titleBeforeRotation,
-                    titleAfterRotation);
+        assertEquals(
+                "Article title have been changed after screen rotation",
+                titleBeforeRotation,
+                titleAfterRotation);
 
-            this.rotateScreenPortrait();
-            String titleAfterSecondRotate = articlePageObject.getArticleTitle();
+        this.rotateScreenPortrait();
+        String titleAfterSecondRotate = articlePageObject.getArticleTitle();
 
-            assertEquals(
-                    "Article title have been changed after screen rotation",
-                    titleAfterRotation,
-                    titleAfterSecondRotate);
-
-        } catch (Exception e) {
-            System.out.println(e.getMessage());
-        } finally {
-            this.rotateScreenPortrait();
-        }
+        assertEquals(
+                "Article title have been changed after screen rotation",
+                titleAfterRotation,
+                titleAfterSecondRotate);
     }
 
     @Test
