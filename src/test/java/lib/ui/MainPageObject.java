@@ -9,12 +9,12 @@ import org.openqa.selenium.WebElement;
 import org.openqa.selenium.support.ui.ExpectedConditions;
 import org.openqa.selenium.support.ui.WebDriverWait;
 
-import java.util.LinkedList;
+import java.util.ArrayList;
 import java.util.List;
 
 public class MainPageObject {
     protected AppiumDriver driver;
-    protected List<WebElement> list = new LinkedList<>();
+    protected List<WebElement> list = new ArrayList<>();
 
     public MainPageObject(AppiumDriver driver) {
         this.driver = driver;
@@ -126,6 +126,11 @@ public class MainPageObject {
     public int getAmountElements(By by) {
         List elements = driver.findElements(by);
         return elements.size();
+    }
+
+    public List<WebElement> getFindsElements(By by) {
+        list = driver.findElements(by);
+        return list;
     }
 
     public void assertElementsNotPresent(By by, String message) {

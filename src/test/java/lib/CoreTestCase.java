@@ -4,26 +4,15 @@ import io.appium.java_client.AppiumDriver;
 import io.appium.java_client.android.AndroidDriver;
 import junit.framework.TestCase;
 import org.openqa.selenium.ScreenOrientation;
-import org.openqa.selenium.WebElement;
 import org.openqa.selenium.remote.DesiredCapabilities;
 
 import java.net.URL;
-import java.util.LinkedList;
-import java.util.List;
 
 public class CoreTestCase extends TestCase {
 
     protected AppiumDriver driver;
     protected String defaultOrientation = "PORTRAIT";
-    protected List<WebElement> list = new LinkedList<>();
 
-    public List<WebElement> getList() {
-        return list;
-    }
-
-    protected String searchWord = "Java";
-
-    protected String nameFolder = "Learning Programming";
     private static final String appiumURL = "http://127.0.0.1:4723/wd/hub";
 
     @Override

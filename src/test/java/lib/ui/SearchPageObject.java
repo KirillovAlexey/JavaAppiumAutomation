@@ -1,7 +1,6 @@
 package lib.ui;
 
 import io.appium.java_client.AppiumDriver;
-import io.appium.java_client.android.AndroidElement;
 import org.openqa.selenium.By;
 import org.openqa.selenium.WebElement;
 
@@ -14,14 +13,17 @@ public class SearchPageObject extends MainPageObject {
                     "//*[@resource-id='org.wikipedia:id/page_list_item_container']" +
                             "//*[@text='{SUBSTRING}']",
             SEARCH_CANCEL_BUTTON = "org.wikipedia:id/search_close_btn",
-            SEARCH_RESULT_ELEMENT = "//*[@resource-id='org.wikipedia:id/search_results_list']/*[@resource-id='org.wikipedia:id/page_list_item_container']",
+            SEARCH_RESULT_ELEMENT = "//*[@resource-id='org.wikipedia:id/page_list_item_container']",
             SEARCH_EMPTY_RESULT_ELEMENT = "//*[@text='No results found']",
             ADD_SEARCH_ARTICLE_TO_LIST = "org.wikipedia:id/page_list_item_title",
             SEARCH_ARTICLE_BY_TITLE_AND_DESCRIPTION =
                     "//*[@resource-id='org.wikipedia:id/page_list_item_container']" +
                             "//*[@text='{TITLE}']" +
                             "//.." +
-                            "//*[@text='{DESCRIPTION}']";
+                            "//*[@text='{DESCRIPTION}']",
+            SEARCH_GET_TEXT_FOR_TITLE = "//*[@text='{SUBSTRING}']",
+            SEARCH_GET_TEXT_FOR_DESCRIPTION = "//*[@text='{SUBSTRING}']";
+
 
     //*[@resource-id='org.wikipedia:id/page_list_item_container']//*[@text='Java'] | //*[@text='Island of Indonesia']
     //*[@resource-id='org.wikipedia:id/page_list_item_container']//*[@text='Java']//..//*[@text='Island of Indonesia']
@@ -116,9 +118,14 @@ public class SearchPageObject extends MainPageObject {
         this.list.addAll(driver.findElementsById(ADD_SEARCH_ARTICLE_TO_LIST));
         this.checkWordInputAllUrls(list, searchWord);
     }
-    public void checkFindsArticleInSearchingList(){
-        for (WebElement article: this.list) {
-            this.waitForElementPresent((By.id(article.getAttribute("resource-id"))) ,"Cannot find this article" + article);
+
+    public void checkFindsArticleInSearchingList(String tmpl) {
+        this.list.addAll(driver.findElementsById(ADD_SEARCH_ARTICLE_TO_LIST));
+        for (WebElement article : this.list) {
+            System.out.println(article.getText());
+            this.waitForElementPresent(
+                    By.id(article.getAttribute("resource-id")),
+                    "Cannot find this article" + article);
         }
     }
 
@@ -138,9 +145,10 @@ public class SearchPageObject extends MainPageObject {
     }
 
     private static String getResultSearchElementForTitleAndDescriptions(String title, String description) {
-        String temp = SEARCH_ARTICLE_BY_TITLE_AND_DESCRIPTION.replace("{TITLE}", title);
-        temp = temp.replace("{DESCRIPTION}", description);
-        return temp;
+
+        return SEARCH_ARTICLE_BY_TITLE_AND_DESCRIPTION
+                .replace("{TITLE}", title)
+                .replace("{DESCRIPTION}", description);
     }
     /*TEMPLATES METHODS*/
 }
