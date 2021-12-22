@@ -2,6 +2,7 @@ package lib.ui;
 
 import io.appium.java_client.AppiumDriver;
 import io.appium.java_client.TouchAction;
+import lib.Platform;
 import org.junit.Assert;
 import org.openqa.selenium.By;
 import org.openqa.selenium.Dimension;
@@ -70,6 +71,20 @@ public class MainPageObject {
                 .perform();
     }
 
+    public void clickElementAndToRightUpperCorner(String locator, String message) {
+        WebElement element = this.waitForElementPresent(locator + "/..", message);
+        int rightX = element.getLocation().getX();
+        int upperY = element.getLocation().getY();
+        int lowerY = upperY + element.getSize().getHeight();
+        int middleY = (upperY + lowerY) / 2;
+        int width = element.getSize().getWidth();
+
+        int pointToClickX = (rightX + width) - 3;
+        int pointToClickY = middleY;
+        TouchAction action = new TouchAction(driver);
+        action.tap(pointToClickX, pointToClickY).perform();
+    }
+
     public void swipeElementToLeft(String locator, String message) {
         WebElement element = waitForElementPresent(
                 locator,
@@ -82,11 +97,16 @@ public class MainPageObject {
         int middleY = (upperY + lowerY) / 2;
 
         TouchAction action = new TouchAction(driver);
-        action.press(rightX, middleY)
-                .waitAction(300)
-                .moveTo(leftX, middleY)
-                .release()
-                .perform();
+        action.press(rightX, middleY);
+        action.waitAction(300);
+        if (Platform.getInstance().isAndroid()) {
+            action.moveTo(leftX, middleY);
+        } else {
+            int offset_x = (element.getSize().getWidth() * -1);
+            action.moveTo(offset_x, 0);
+        }
+        action.release();
+        action.perform();
     }
 
     public void swipeUpQuick() {
@@ -104,6 +124,31 @@ public class MainPageObject {
                 break;
             }
         }
+    }
+
+    //Прокрутка экрана до подвала на iOS
+    public void swipeUpTillElementAppear(String locator, String error_message, int max_swipes) {
+        int already_swiped = 0;
+
+        while (this.isElementLocatedOnTheScreen(locator)) {
+            if (already_swiped > max_swipes) {
+                Assert.assertTrue(error_message, this.isElementLocatedOnTheScreen(locator));
+            }
+            swipeUpQuick();
+            ++already_swiped;
+        }
+    }
+
+    //Вспомогательный метод прокрутки до подвала на iOS
+    public boolean isElementLocatedOnTheScreen(String locator) {
+        int element_location_by_y = this.waitForElementPresent(
+                locator,
+                "Cannot find element by locator",
+                1).
+                getLocation().
+                getY();
+        int screen_size_by_y = driver.manage().window().getSize().getHeight();
+        return element_location_by_y < screen_size_by_y;
     }
 
     public WebElement assertElementHasText(String locator, String expected, String message) {

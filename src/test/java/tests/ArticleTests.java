@@ -3,36 +3,31 @@ package tests;
 import lib.CoreTestCase;
 import lib.ui.ArticlePageObject;
 import lib.ui.SearchPageObject;
+import lib.ui.factories.ArticlePageObjectFactory;
+import lib.ui.factories.SearchPageObjectFactory;
 import org.junit.Test;
 
 public class ArticleTests extends CoreTestCase {
     @Test
     public void testSwipeArticle() {
-
-        if(this.platform.isIOS()){
-            return;
-        }
-        SearchPageObject searchPageObject = new SearchPageObject(driver);
+        SearchPageObject searchPageObject = SearchPageObjectFactory.get(driver);
         searchPageObject.initSearchInput();
-        searchPageObject.typeSearchLine("Appium");
-        searchPageObject.clickByArticleWithSubString("Appium");
+        searchPageObject.typeSearchLine("Java");
+        searchPageObject.clickByArticleWithSubString("Object-oriented programming language");
 
-        ArticlePageObject articlePageObject = new ArticlePageObject(driver);
+        ArticlePageObject articlePageObject = ArticlePageObjectFactory.get(driver);
         articlePageObject.waitForTitleElement();
         articlePageObject.swipeToFooter();
     }
 
     @Test
     public void testCompareArticleTitle() {
-        if(this.platform.isIOS()){
-            return;
-        }
-        SearchPageObject searchPageObject = new SearchPageObject(driver);
+        SearchPageObject searchPageObject = SearchPageObjectFactory.get(driver);
         searchPageObject.initSearchInput();
         searchPageObject.typeSearchLine("Java");
         searchPageObject.clickByArticleWithSubString("Object-oriented programming language");
 
-        ArticlePageObject articlePageObject = new ArticlePageObject(driver);
+        ArticlePageObject articlePageObject = ArticlePageObjectFactory.get(driver);
         String article_title = articlePageObject.getArticleTitle();
 
         assertEquals(
@@ -43,10 +38,7 @@ public class ArticleTests extends CoreTestCase {
 
     @Test
     public void testCheckWordIntoEachFindArticle() {
-        if(this.platform.isIOS()){
-            return;
-        }
-        SearchPageObject searchPageObject = new SearchPageObject(driver);
+        SearchPageObject searchPageObject = SearchPageObjectFactory.get(driver);
         searchPageObject.initSearchInput();
         String searchWord = "Java";
         searchPageObject.typeSearchLine(searchWord);
@@ -56,18 +48,14 @@ public class ArticleTests extends CoreTestCase {
     //refactoringEX6
     @Test
     public void testCheckTitleEx6() {
-        if(this.platform.isIOS()){
-            return;
-        }
-        SearchPageObject searchPageObject = new SearchPageObject(driver);
+        SearchPageObject searchPageObject = SearchPageObjectFactory.get(driver);
         searchPageObject.initSearchInput();
         searchPageObject.typeSearchLine("Java");
 
         String searchNameArticle = "Java (programming language)";
-        SearchPageObject searchPageObject1 = new SearchPageObject(driver);
         searchPageObject.clickByArticleWithSubString(searchNameArticle);
 
-        ArticlePageObject articlePageObject = new ArticlePageObject(driver);
+        ArticlePageObject articlePageObject = ArticlePageObjectFactory.get(driver);
         articlePageObject.getArticleTitleWithoutTimeout();
     }
 }

@@ -1,14 +1,14 @@
 package lib.ui;
 
 import io.appium.java_client.AppiumDriver;
-import org.openqa.selenium.By;
+import lib.Platform;
 
-public class MyListsPageObject extends MainPageObject {
+abstract public class MyListsPageObject extends MainPageObject {
 
-    private static final String
-            FOLDER_BY_NAME = "xpath://*[contains(@text, '{FOLDER_NAME}')]",
-            ARTICLE_BY_TITLE = "xpath://*[contains(@text, '{TITLE}')]",
-            OPEN_BOOKMARK = "xpath://*[contains(@text,'{{BOOKMARK}}')]/../../..";
+    protected static String
+            FOLDER_BY_NAME,
+            ARTICLE_BY_TITLE,
+            OPEN_BOOKMARK;
 
     public MyListsPageObject(AppiumDriver driver) {
         super(driver);
@@ -28,8 +28,11 @@ public class MyListsPageObject extends MainPageObject {
         this.swipeElementToLeft(
                 articleTitleXpath,
                 "Cannot find save article" + articleTitle);
+        if (Platform.getInstance().isIOS()) {
+            this.clickElementAndToRightUpperCorner(articleTitleXpath,
+                    "Cannot find save article" + articleTitle);
+        }
         this.waitForArticleToDisappearByTitle(articleTitle);
-
     }
 
     public void waitForArticleToDisappearByTitle(String articleTitle) {

@@ -1,21 +1,22 @@
 package lib.ui;
 
 import io.appium.java_client.AppiumDriver;
+import lib.Platform;
 import org.openqa.selenium.WebElement;
 
-public class ArticlePageObject extends MainPageObject {
+abstract public class ArticlePageObject extends MainPageObject {
 
-    private static final String
-            TITLE = "id:org.wikipedia:id/view_page_title_text",
-            FOOTER_ELEMENT = "xpath://*[@text = 'View page in browser']",
-            OPTIONS_BUTTON = "xpath://android.widget.ImageView[@content-desc = 'More options']",
-            OPTIONS_ADD_TO_MY_LIST_BUTTON = "xpath://*[contains(@text, 'Add to reading list')]",
-            ADD_TO_MY_LIST_OVERLAY = "xpath://*[contains(@text, 'GOT IT')]",
-            MY_LIST_NAME_INPUT = "id:org.wikipedia:id/text_input",
-            MY_LIST_OK_BUTTON = "xpath://*[contains(@text, 'OK')]",
-            CLOSE_ARTICLE_BUTTON = "xpath://*[contains(@content-desc, 'Navigate up')]",
-            ADD_TO_MY_CREATED_LIST_PREVIOUS = "xpath://*[contains(@text,'{nameFolder}')]/../..",
-            ADD_NEW_FOLDER_NAME = "id:org.wikipedia:id/create_button";
+    protected static String
+            TITLE,
+            FOOTER_ELEMENT,
+            OPTIONS_BUTTON,
+            OPTIONS_ADD_TO_MY_LIST_BUTTON,
+            ADD_TO_MY_LIST_OVERLAY,
+            MY_LIST_NAME_INPUT,
+            MY_LIST_OK_BUTTON,
+            CLOSE_ARTICLE_BUTTON,
+            ADD_TO_MY_CREATED_LIST_PREVIOUS,
+            ADD_NEW_FOLDER_NAME;
 
     public ArticlePageObject(AppiumDriver driver) {
         super(driver);
@@ -30,20 +31,35 @@ public class ArticlePageObject extends MainPageObject {
 
     public String getArticleTitle() {
         WebElement titleElement = waitForTitleElement();
-        return titleElement.getAttribute("text");
+        if (Platform.getInstance().isAndroid()) {
+            return titleElement.getAttribute("text");
+        } else {
+            return titleElement.getAttribute("name");
+        }
     }
 
     public String getArticleTitleWithoutTimeout() {
         WebElement titleElement = this.assertElementPresentWithoutTimeout(TITLE);
-        return titleElement.getAttribute("text");
+        if (Platform.getInstance().isAndroid()) {
+            return titleElement.getAttribute("text");
+        } else {
+            return titleElement.getAttribute("name");
+        }
     }
 
     public void swipeToFooter() {
-        this.swipeUpToFindElement(
-                FOOTER_ELEMENT,
-                "Cannot find the end of article",
-                20
-        );
+        if (Platform.getInstance().isAndroid()) {
+            this.swipeUpToFindElement(
+                    FOOTER_ELEMENT,
+                    "Cannot find the end of article",
+                    40
+            );
+        } else {
+            this.swipeUpTillElementAppear(
+                    FOOTER_ELEMENT,
+                    "Cannot find the end of Article",
+                    40);
+        }
     }
 
     public void addFirstArticleToMyList(String nameOfFolder) {
@@ -113,6 +129,13 @@ public class ArticlePageObject extends MainPageObject {
     public void closeArticle() {
         this.waitForElementAndClick(CLOSE_ARTICLE_BUTTON,
                 "Cannot find close article button 'X'",
+                5);
+    }
+
+    public void addArticlesToMySaved() {
+        this.waitForElementAndClick(
+                OPTIONS_ADD_TO_MY_LIST_BUTTON,
+                "Cannot find option to add article to reading list",
                 5);
     }
 
