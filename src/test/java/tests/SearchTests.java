@@ -7,6 +7,9 @@ import org.junit.Test;
 public class SearchTests extends CoreTestCase {
     @Test
     public void testAmountOfNotEmptySearch() {
+        if(this.platform.isIOS()){
+            return;
+        }
         SearchPageObject searchPageObject = new SearchPageObject(driver);
         searchPageObject.initSearchInput();
         String searchLine = "Linkin Park Diskography";
@@ -20,6 +23,9 @@ public class SearchTests extends CoreTestCase {
 
     @Test
     public void testAmountOfEmptySearch() {
+        if(this.platform.isIOS()){
+            return;
+        }
         SearchPageObject searchPageObject = new SearchPageObject(driver);
         searchPageObject.initSearchInput();
         String searchLine = "zxcasdasdqwe";
@@ -30,6 +36,9 @@ public class SearchTests extends CoreTestCase {
 
     @Test
     public void testSearchArticle() {
+        if(this.platform.isIOS()){
+            return;
+        }
         SearchPageObject searchPageObject = new SearchPageObject(driver);
         searchPageObject.initSearchInput();
         searchPageObject.typeSearchLine("Java");
@@ -38,6 +47,9 @@ public class SearchTests extends CoreTestCase {
 
     @Test
     public void testCancelSearch() {
+        if(this.platform.isIOS()){
+            return;
+        }
         SearchPageObject searchPageObject = new SearchPageObject(driver);
         searchPageObject.initSearchInput();
         searchPageObject.waitForCancelButtonAppear();
@@ -48,7 +60,9 @@ public class SearchTests extends CoreTestCase {
     //EX3
     @Test
     public void testCancelSearchEx3() {
-
+        if(this.platform.isIOS()){
+            return;
+        }
         SearchPageObject searchPageObject = new SearchPageObject(driver);
         searchPageObject.initSearchInput();
         String searchLine = "Java";
@@ -63,7 +77,9 @@ public class SearchTests extends CoreTestCase {
 
     @Test
     public void testSearchArticleByTitleAndDescription() {
-
+        if(this.platform.isIOS()){
+            return;
+        }
         String searchWord = "Java";
         String title = "Java (programming language)";
         String description = "Object-oriented programming language";

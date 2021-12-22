@@ -11,6 +11,7 @@ import org.openqa.selenium.support.ui.WebDriverWait;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.regex.Pattern;
 
 public class MainPageObject {
     protected AppiumDriver driver;
@@ -20,36 +21,38 @@ public class MainPageObject {
         this.driver = driver;
     }
 
-    public WebElement waitForElementPresent(By by, String errorMessage, long timeoutInSeconds) {
+    public WebElement waitForElementPresent(String locator, String errorMessage, long timeoutInSeconds) {
+        By by = this.getLocatorByString(locator);
         WebDriverWait wait = new WebDriverWait(driver, timeoutInSeconds);
         wait.withMessage(errorMessage + "\n");
         return wait.until(ExpectedConditions.presenceOfElementLocated(by));
     }
 
-    public WebElement waitForElementPresent(By by, String errorMessage) {
-        return waitForElementPresent(by, errorMessage, 5);
+    public WebElement waitForElementPresent(String locator, String errorMessage) {
+        return waitForElementPresent(locator, errorMessage, 5);
     }
 
-    public WebElement waitForElementAndClick(By by, String message, long timeoutInSeconds) {
-        WebElement element = waitForElementPresent(by, message, timeoutInSeconds);
+    public WebElement waitForElementAndClick(String locator, String message, long timeoutInSeconds) {
+        WebElement element = waitForElementPresent(locator, message, timeoutInSeconds);
         element.click();
         return element;
     }
 
-    public WebElement waitForElementAndSendKeys(By by, String value, String message, long timeoutInSeconds) {
-        WebElement element = waitForElementPresent(by, message, timeoutInSeconds);
+    public WebElement waitForElementAndSendKeys(String locator, String value, String message, long timeoutInSeconds) {
+        WebElement element = waitForElementPresent(locator, message, timeoutInSeconds);
         element.sendKeys(value);
         return element;
     }
 
-    public boolean waitForElementNotPresent(By by, String message, long timeoutInSeconds) {
+    public boolean waitForElementNotPresent(String locator, String message, long timeoutInSeconds) {
+        By by = this.getLocatorByString(locator);
         WebDriverWait wait = new WebDriverWait(driver, timeoutInSeconds);
         wait.withMessage(message + "\n");
         return wait.until(ExpectedConditions.invisibilityOfElementLocated(by));
     }
 
-    public WebElement waitForElementAndClear(By by, String message, long timeoutInSeconds) {
-        WebElement element = waitForElementPresent(by, message, timeoutInSeconds);
+    public WebElement waitForElementAndClear(String locator, String message, long timeoutInSeconds) {
+        WebElement element = waitForElementPresent(locator, message, timeoutInSeconds);
         element.clear();
         return element;
     }
@@ -67,9 +70,9 @@ public class MainPageObject {
                 .perform();
     }
 
-    public void swipeElementToLeft(By by, String message) {
+    public void swipeElementToLeft(String locator, String message) {
         WebElement element = waitForElementPresent(
-                by,
+                locator,
                 message,
                 10);
         int leftX = element.getLocation().getX();
@@ -90,21 +93,22 @@ public class MainPageObject {
         swipeUp(300);
     }
 
-    public void swipeUpToFindElement(By by, String message, int max_swipes) {
+    public void swipeUpToFindElement(String locator, String message, int max_swipes) {
         int already_swiped = 0;
+        By by = this.getLocatorByString(locator);
         while (driver.findElements(by).size() == 0) {
             swipeUpQuick();
             ++already_swiped;
             if (already_swiped > max_swipes) {
-                waitForElementPresent(by, "Cannot find elements " + message, 0);
+                waitForElementPresent(locator, "Cannot find elements " + message, 0);
                 break;
             }
         }
     }
 
-    public WebElement assertElementHasText(By by, String expected, String message) {
+    public WebElement assertElementHasText(String locator, String expected, String message) {
         WebElement webElement = waitForElementPresent(
-                by,
+                locator,
                 "Cannot find this text in search" + expected,
                 15
         );
@@ -123,29 +127,43 @@ public class MainPageObject {
         }
     }
 
-    public int getAmountElements(By by) {
+    public int getAmountElements(String locator) {
+        By by = this.getLocatorByString(locator);
         List elements = driver.findElements(by);
         return elements.size();
     }
 
-    public List<WebElement> getFindsElements(By by) {
+    public List<WebElement> getFindsElements(String locator) {
+        By by = this.getLocatorByString(locator);
         list = driver.findElements(by);
         return list;
     }
 
-    public void assertElementsNotPresent(By by, String message) {
-        int amount_of_elements = getAmountElements(by);
+    public void assertElementsNotPresent(String locator, String message) {
+        int amount_of_elements = getAmountElements(locator);
         if (amount_of_elements > 0) {
-            String default_message = "An element " + by.toString() + " supposed to be not present";
+            String default_message = "An element " + locator + " supposed to be not present";
             throw new AssertionError(default_message + " " + message);
         }
     }
 
-    public WebElement assertElementPresentWithoutTimeout(By by) {
+    public WebElement assertElementPresentWithoutTimeout(String locator) {
         WebElement element = waitForElementPresent(
-                by,
+                locator,
                 "Cannot find title in Article",
                 0);
         return element;
+    }
+
+    private By getLocatorByString(String locator_with_type) {
+        String[] exploded_locator = locator_with_type.split(Pattern.quote(":"), 2);
+        String by_type = exploded_locator[0];
+        String locator = exploded_locator[1];
+
+        if (by_type.equals("xpath")) {
+            return By.xpath(locator);
+        } else if (by_type.equals("id")) {
+            return By.id(locator);
+        } else throw new IllegalArgumentException("Cannot get type of locator. Locator: " + locator);
     }
 }

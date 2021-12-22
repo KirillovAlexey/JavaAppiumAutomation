@@ -1,37 +1,21 @@
 package lib;
 
 import io.appium.java_client.AppiumDriver;
-import io.appium.java_client.android.AndroidDriver;
 import junit.framework.TestCase;
 import org.openqa.selenium.ScreenOrientation;
-import org.openqa.selenium.remote.DesiredCapabilities;
-
-import java.net.URL;
 
 public class CoreTestCase extends TestCase {
 
     protected AppiumDriver driver;
-    protected String defaultOrientation = "PORTRAIT";
-
-    private static final String appiumURL = "http://127.0.0.1:4723/wd/hub";
+    protected Platform platform;
 
     @Override
     protected void setUp() throws Exception {
         super.setUp();
-        DesiredCapabilities capabilities = new DesiredCapabilities();
 
-        capabilities.setCapability("platformName", "Android");
-        capabilities.setCapability("deviceName", "AndroidTestDevice");
-        capabilities.setCapability("platformVersion", "8.0");
-        capabilities.setCapability("automationName", "Appium");
-        capabilities.setCapability("appPackage", "org.wikipedia");
-        capabilities.setCapability("appActivity", ".main.MainActivity");
-        capabilities.setCapability("app",
-                "C:\\Users\\amoroz\\Desktop\\JavaAppiumAutomation\\apks\\org.wikipedia.apk");
-        capabilities.setCapability("orientation", "PORTRAIT");
-        capabilities.setCapability("androidNaturalOrientation", true);
-
-        driver = new AndroidDriver(new URL(appiumURL), capabilities);
+        this.platform = new Platform();
+        driver = this.platform.getDriver();
+        this.rotateScreenPortrait();
     }
 
     @Override
@@ -51,4 +35,16 @@ public class CoreTestCase extends TestCase {
     protected void backgroundApp(int time) {
         driver.runAppInBackground(time);
     }
+//    private AppiumDriver getDriver() throws Exception {
+//        String driverName = System.getenv("DRIVER");
+//
+//        if (driverName.equals(ANDROID_DRIVER)) {
+//            driver = new AndroidDriver(new URL(appiumURL), this.getCapabilitiesByPlatformEnv());
+//        } else if (driverName.equals(IOS_DRIVER)) {
+//            driver = new IOSDriver(new URL(appiumURL), this.getCapabilitiesByPlatformEnv());
+//        } else {
+//            throw new Exception("Cannot get run driver from env variable. Driver value " + driverName);
+//        }
+//        return driver;
+//    }
 }

@@ -10,7 +10,9 @@ import org.junit.Test;
 public class MyListsTests extends CoreTestCase {
     @Test
     public void testSaveArticleToMyList() {
-
+        if(this.platform.isIOS()){
+            return;
+        }
         SearchPageObject searchPageObject = new SearchPageObject(driver);
         searchPageObject.initSearchInput();
         searchPageObject.typeSearchLine("Java");
@@ -34,7 +36,9 @@ public class MyListsTests extends CoreTestCase {
     //refactoringEX5
     @Test
     public void testAddArticleAndRemoveAnotherArticleFromBookmarksEx5() {
-
+        if(this.platform.isIOS()){
+            return;
+        }
         SearchPageObject searchPageObject = new SearchPageObject(driver);
         searchPageObject.initSearchInput();
         searchPageObject.typeSearchLine("Java");

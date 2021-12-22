@@ -9,6 +9,9 @@ public class ArticleTests extends CoreTestCase {
     @Test
     public void testSwipeArticle() {
 
+        if(this.platform.isIOS()){
+            return;
+        }
         SearchPageObject searchPageObject = new SearchPageObject(driver);
         searchPageObject.initSearchInput();
         searchPageObject.typeSearchLine("Appium");
@@ -21,6 +24,9 @@ public class ArticleTests extends CoreTestCase {
 
     @Test
     public void testCompareArticleTitle() {
+        if(this.platform.isIOS()){
+            return;
+        }
         SearchPageObject searchPageObject = new SearchPageObject(driver);
         searchPageObject.initSearchInput();
         searchPageObject.typeSearchLine("Java");
@@ -37,6 +43,9 @@ public class ArticleTests extends CoreTestCase {
 
     @Test
     public void testCheckWordIntoEachFindArticle() {
+        if(this.platform.isIOS()){
+            return;
+        }
         SearchPageObject searchPageObject = new SearchPageObject(driver);
         searchPageObject.initSearchInput();
         String searchWord = "Java";
@@ -47,7 +56,9 @@ public class ArticleTests extends CoreTestCase {
     //refactoringEX6
     @Test
     public void testCheckTitleEx6() {
-
+        if(this.platform.isIOS()){
+            return;
+        }
         SearchPageObject searchPageObject = new SearchPageObject(driver);
         searchPageObject.initSearchInput();
         searchPageObject.typeSearchLine("Java");
