@@ -2,6 +2,8 @@ package lib.ui;
 
 import io.appium.java_client.AppiumDriver;
 import io.appium.java_client.TouchAction;
+import io.appium.java_client.touch.WaitOptions;
+import io.appium.java_client.touch.offset.PointOption;
 import lib.Platform;
 import org.junit.Assert;
 import org.openqa.selenium.By;
@@ -10,6 +12,7 @@ import org.openqa.selenium.WebElement;
 import org.openqa.selenium.support.ui.ExpectedConditions;
 import org.openqa.selenium.support.ui.WebDriverWait;
 
+import java.time.Duration;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.regex.Pattern;
@@ -64,9 +67,9 @@ public class MainPageObject {
         int x = size.width / 2;
         int start_y = (int) (size.height * 0.8);
         int end_y = (int) (size.height * 0.2);
-        action.press(x, start_y)
-                .waitAction(timeOfSwipe)
-                .moveTo(x, end_y)
+        action.press(PointOption.point(x, start_y))
+                .waitAction(WaitOptions.waitOptions(Duration.ofMillis(timeOfSwipe)))
+                .moveTo(PointOption.point(x, end_y))
                 .release()
                 .perform();
     }
@@ -82,7 +85,7 @@ public class MainPageObject {
         int pointToClickX = (rightX + width) - 3;
         int pointToClickY = middleY;
         TouchAction action = new TouchAction(driver);
-        action.tap(pointToClickX, pointToClickY).perform();
+        action.tap(PointOption.point(pointToClickX, pointToClickY)).perform();
     }
 
     public void swipeElementToLeft(String locator, String message) {
@@ -97,13 +100,13 @@ public class MainPageObject {
         int middleY = (upperY + lowerY) / 2;
 
         TouchAction action = new TouchAction(driver);
-        action.press(rightX, middleY);
-        action.waitAction(300);
+        action.press(PointOption.point(rightX, middleY));
+        action.waitAction(WaitOptions.waitOptions(Duration.ofMillis(300)));
         if (Platform.getInstance().isAndroid()) {
-            action.moveTo(leftX, middleY);
+            action.moveTo(PointOption.point(leftX, middleY));
         } else {
             int offset_x = (element.getSize().getWidth() * -1);
-            action.moveTo(offset_x, 0);
+            action.moveTo(PointOption.point(offset_x, 0));
         }
         action.release();
         action.perform();

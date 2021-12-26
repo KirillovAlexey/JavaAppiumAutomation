@@ -12,8 +12,8 @@ public class ArticleTests extends CoreTestCase {
     public void testSwipeArticle() {
         SearchPageObject searchPageObject = SearchPageObjectFactory.get(driver);
         searchPageObject.initSearchInput();
-        searchPageObject.typeSearchLine("Java");
-        searchPageObject.clickByArticleWithSubString("Object-oriented programming language");
+        searchPageObject.typeSearchLine("Appium");
+        searchPageObject.clickByArticleWithSubString("Appium");
 
         ArticlePageObject articlePageObject = ArticlePageObjectFactory.get(driver);
         articlePageObject.waitForTitleElement();
